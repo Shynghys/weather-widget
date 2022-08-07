@@ -53,8 +53,8 @@
 		display: flex;
 		gap: 10px;
 		flex-direction: column;
-
-		background: rgb(215, 233, 234);
+		margin-bottom: 20px;
+		background: rgb(234, 241, 241);
 		width: 300px;
 	}
 	.widget__city {
@@ -64,8 +64,8 @@
 	.widget__temp {
 		width: 100%;
 		/* display: grid;
-																																													place-items: center flex-start;
-																																													grid-template: auto/auto auto; */
+																																																place-items: center flex-start;
+																																																grid-template: auto/auto auto; */
 		display: flex;
 		align-items: center;
 		font-size: 28px;

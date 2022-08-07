@@ -3,27 +3,30 @@
 	<div class="container">
 		<img
 			class="widget__gear-icon"
-			src="public/gear.svg"
+			:src="isSettingsOpen ? 'cross.png' : '/gear.svg'"
 			alt=""
 			@click="change"
 		/>
-		<the-settings v-if="isSettingsOpen" :list="list" />
-		<div v-for="(item, index) in list" :key="index">
+		<the-settings
+			v-if="isSettingsOpen"
+			:list="list"
+			@getFromSettingsLocation="getWeather"
+			@deleteEl="deleteEl"
+			@rearrange="rearrange"
+		/>
+		<div v-for="item in list" :key="item.id">
 			<the-widget :item="item" />
 		</div>
-
-		<the-input @getLocation="getWeather" />
 	</div>
 </template>
 <script >
-	import TheInput from "./components/TheInput.vue";
 	import TheWidget from "./components/TheWidget.vue";
 	import TheSettings from "./components/TheSettings.vue";
+
 	export default {
 		name: "App",
 
 		components: {
-			TheInput,
 			TheWidget,
 			TheSettings,
 		},
@@ -31,13 +34,19 @@
 			return {
 				list: [],
 				isSettingsOpen: false,
-				//
 			};
 		},
 		mounted() {
-			try {
-				this.list = JSON.parse(localStorage.getItem("apiData"));
-				if (this.list.length == 0) {
+			this.$nextTick(function () {
+				console.log("try");
+				try {
+					console.log("try");
+					this.list = JSON.parse(localStorage.getItem("apiData"));
+					if (this.list == null || this.list.length == 0) {
+						throw "no list";
+					}
+				} catch (e) {
+					console.log("catch");
 					const success = (position) => {
 						const latitude = position.coords.latitude;
 						const longitude = position.coords.longitude;
@@ -50,10 +59,10 @@
 
 					// This will open permission popup
 					navigator.geolocation.getCurrentPosition(success, error);
+
+					console.log(e);
 				}
-			} catch (e) {
-				console.log(e);
-			}
+			});
 		},
 		methods: {
 			async getWeather(location) {
@@ -62,17 +71,21 @@
 				let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
 				console.log(url);
 				await this.axios.get(url).then((response) => {
-					console.log(response.data);
-					this.list.push(response.data);
+					// console.log(response.data);
+					this.addEl(response.data);
 				});
 				localStorage.setItem("apiData", JSON.stringify(this.list));
 			},
 			async getByPointsWeather(lat, lon) {
+				console.log(lat, lon);
 				// bac0994b0aba261ed63bc5edfb7a3296
 				let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
 				console.log(url);
 				await this.axios.get(url).then((response) => {
-					console.log(response.data);
+					console.log(this.list, response.data);
+					// if (!this.list) {
+					// 	this.list = [];
+					// }
 					this.list.push(response.data);
 				});
 				localStorage.setItem("apiData", JSON.stringify(this.list));
@@ -80,6 +93,18 @@
 			change() {
 				this.isSettingsOpen = !this.isSettingsOpen;
 				console.log(this.isSettingsOpen);
+			},
+			deleteEl(id) {
+				this.list = this.list.filter((item) => item.id != id);
+				localStorage.setItem("apiData", JSON.stringify(this.list));
+			},
+			addEl(el) {
+				const found = this.list.some((item) => item.id == el.id);
+				if (!found) this.list.push(el);
+			},
+			rearrange(list) {
+				this.list = list;
+				localStorage.setItem("apiData", JSON.stringify(this.list));
 			},
 		},
 	};
