@@ -1,5 +1,6 @@
 <template>
 	<div class="settings">
+		123
 		<div class="settings__title">Settings</div>
 
 		<!-- <div v-for="item in list" :key="item.id" class="settings__item">
@@ -25,7 +26,7 @@
 				<div class="settings__item">
 					<img src="/menu.png" alt="" class="settings__icons" />
 					<div class="item">
-						{{ element.name }}, {{ element.sys.country }}
+						{{ element.name }}, {{ element?.sys?.country }}
 					</div>
 
 					<img
@@ -89,7 +90,7 @@
 		z-index: 99;
 		width: 300px;
 		top: 0;
-		background: rgb(250, 243, 243);
+		background: rgb(248, 245, 245);
 		height: 100%;
 		/* gap: 20px; */
 	}

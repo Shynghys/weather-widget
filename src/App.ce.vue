@@ -1,6 +1,7 @@
 
 <template>
 	<div class="container">
+		ss
 		<img
 			class="widget__gear-icon"
 			:src="isSettingsOpen ? 'cross.png' : '/gear.svg'"
@@ -17,11 +18,13 @@
 		<div v-for="item in list" :key="item.id">
 			<the-widget :item="item" />
 		</div>
+		1
 	</div>
 </template>
 <script >
 	import TheWidget from "./components/TheWidget.vue";
 	import TheSettings from "./components/TheSettings.vue";
+	import axios from "axios";
 
 	export default {
 		name: "App",
@@ -70,8 +73,8 @@
 				// bac0994b0aba261ed63bc5edfb7a3296
 				let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
 				console.log(url);
-				await this.axios.get(url).then((response) => {
-					// console.log(response.data);
+				await axios.get(url).then((response) => {
+					console.log(response.data);
 					this.addEl(response.data);
 				});
 				localStorage.setItem("apiData", JSON.stringify(this.list));
@@ -81,7 +84,7 @@
 				// bac0994b0aba261ed63bc5edfb7a3296
 				let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
 				console.log(url);
-				await this.axios.get(url).then((response) => {
+				await axios.get(url).then((response) => {
 					console.log(this.list, response.data);
 					// if (!this.list) {
 					// 	this.list = [];

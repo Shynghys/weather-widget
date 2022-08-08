@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "document-register-element": "^1.14.10",
     "vue": "^3.2.37",
     "vue-axios": "^3.4.1",
+    "vue-custom-element": "^3.3.0",
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
