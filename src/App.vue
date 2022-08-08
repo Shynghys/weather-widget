@@ -38,13 +38,21 @@
 		},
 		mounted() {
 			this.$nextTick(function () {
-				console.log("try");
+				console.log(
+					"try",
+					this.list == null,
+					this.list.length == 0,
+					this.list
+				);
 				try {
 					console.log("try");
 					this.list = JSON.parse(localStorage.getItem("apiData"));
+
 					if (this.list == null || this.list.length == 0) {
+						console.log("thorw");
 						throw "no list";
 					}
+					console.log("try1");
 				} catch (e) {
 					console.log("catch");
 					const success = (position) => {

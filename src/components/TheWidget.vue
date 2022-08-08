@@ -1,5 +1,5 @@
 <template>
-	<div class="widget">
+	<div class="widget" v-if="item">
 		<div class="widget__city">{{ item.name }}, {{ item.sys.country }}</div>
 
 		<div class="widget__temp">
@@ -22,7 +22,7 @@
 		<div class="widget__desc">
 			<img
 				class="widget__gps-icon"
-				src="public/gps-arrow.png"
+				src="/gps-arrow.png"
 				alt=""
 				:style="{ transform: 'rotate(' + item.wind.deg - 30 + 'deg)' }"
 			/>
@@ -64,8 +64,8 @@
 	.widget__temp {
 		width: 100%;
 		/* display: grid;
-																																																place-items: center flex-start;
-																																																grid-template: auto/auto auto; */
+																																																		place-items: center flex-start;
+																																																		grid-template: auto/auto auto; */
 		display: flex;
 		align-items: center;
 		font-size: 28px;
