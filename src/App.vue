@@ -20,12 +20,100 @@
 	</div>
 </template>
 <script >
+	import { ref, reactive, watch, nextTick, onMounted } from "vue";
 	import TheWidget from "./components/TheWidget.vue";
 	import TheSettings from "./components/TheSettings.vue";
-
+	import axios from "axios";
 	export default {
 		name: "App",
+		setup() {
+			const list = reactive([]);
+			const isSettingsOpen = ref(false);
 
+			onMounted(() => {
+				nextTick(function () {
+					console.log("try", list == null, list.length == 0, list);
+					try {
+						console.log("try");
+						list = JSON.parse(localStorage.getItem("apiData"));
+
+						if (list == null || list.length == 0) {
+							console.log("thorw");
+							throw "no list";
+						}
+						console.log("try1");
+					} catch (e) {
+						console.log("catch");
+						const success = (position) => {
+							const latitude = position.coords.latitude;
+							const longitude = position.coords.longitude;
+							getByPointsWeather(latitude, longitude);
+						};
+
+						const error = (err) => {
+							console.log(error);
+						};
+
+						// This will open permission popup
+						navigator.geolocation.getCurrentPosition(success, error);
+
+						console.log(e);
+					}
+				});
+			});
+
+			async function getWeather(location) {
+				console.log(location);
+				// bac0994b0aba261ed63bc5edfb7a3296
+				let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
+				console.log(url);
+				await axios.get(url).then((response) => {
+					// console.log(response.data);
+					addEl(response.data);
+				});
+				localStorage.setItem("apiData", JSON.stringify(list));
+			}
+			async function getByPointsWeather(lat, lon) {
+				console.log(lat, lon);
+				// bac0994b0aba261ed63bc5edfb7a3296
+				let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
+				console.log(url);
+				await axios.get(url).then((response) => {
+					console.log(list, response.data);
+					// if (!list) {
+					// 	list = [];
+					// }
+					list.push(response.data);
+				});
+				localStorage.setItem("apiData", JSON.stringify(list));
+			}
+			function change() {
+				isSettingsOpen = !isSettingsOpen;
+				console.log(isSettingsOpen);
+			}
+			function deleteEl(id) {
+				list = list.filter((item) => item.id != id);
+				localStorage.setItem("apiData", JSON.stringify(list));
+			}
+			function addEl(el) {
+				const found = list.some((item) => item.id == el.id);
+				if (!found) list.push(el);
+			}
+			function rearrange(list) {
+				list = list;
+				localStorage.setItem("apiData", JSON.stringify(this.list));
+			}
+			return {
+				isSettingsOpen,
+				list,
+				rearrange,
+				addEl,
+				change,
+				deleteEl,
+				getByPointsWeather,
+				getWeather,
+			};
+		},
 		components: {
 			TheWidget,
 			TheSettings,
@@ -36,85 +124,8 @@
 				isSettingsOpen: false,
 			};
 		},
-		mounted() {
-			this.$nextTick(function () {
-				console.log(
-					"try",
-					this.list == null,
-					this.list.length == 0,
-					this.list
-				);
-				try {
-					console.log("try");
-					this.list = JSON.parse(localStorage.getItem("apiData"));
 
-					if (this.list == null || this.list.length == 0) {
-						console.log("thorw");
-						throw "no list";
-					}
-					console.log("try1");
-				} catch (e) {
-					console.log("catch");
-					const success = (position) => {
-						const latitude = position.coords.latitude;
-						const longitude = position.coords.longitude;
-						this.getByPointsWeather(latitude, longitude);
-					};
-
-					const error = (err) => {
-						console.log(error);
-					};
-
-					// This will open permission popup
-					navigator.geolocation.getCurrentPosition(success, error);
-
-					console.log(e);
-				}
-			});
-		},
-		methods: {
-			async getWeather(location) {
-				console.log(location);
-				// bac0994b0aba261ed63bc5edfb7a3296
-				let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
-				console.log(url);
-				await this.axios.get(url).then((response) => {
-					// console.log(response.data);
-					this.addEl(response.data);
-				});
-				localStorage.setItem("apiData", JSON.stringify(this.list));
-			},
-			async getByPointsWeather(lat, lon) {
-				console.log(lat, lon);
-				// bac0994b0aba261ed63bc5edfb7a3296
-				let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=bac0994b0aba261ed63bc5edfb7a3296`;
-				console.log(url);
-				await this.axios.get(url).then((response) => {
-					console.log(this.list, response.data);
-					// if (!this.list) {
-					// 	this.list = [];
-					// }
-					this.list.push(response.data);
-				});
-				localStorage.setItem("apiData", JSON.stringify(this.list));
-			},
-			change() {
-				this.isSettingsOpen = !this.isSettingsOpen;
-				console.log(this.isSettingsOpen);
-			},
-			deleteEl(id) {
-				this.list = this.list.filter((item) => item.id != id);
-				localStorage.setItem("apiData", JSON.stringify(this.list));
-			},
-			addEl(el) {
-				const found = this.list.some((item) => item.id == el.id);
-				if (!found) this.list.push(el);
-			},
-			rearrange(list) {
-				this.list = list;
-				localStorage.setItem("apiData", JSON.stringify(this.list));
-			},
-		},
+		methods: {},
 	};
 </script>
 
