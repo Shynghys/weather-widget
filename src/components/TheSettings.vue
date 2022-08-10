@@ -2,20 +2,8 @@
 	<div class="settings">
 		<div class="settings__title">Settings</div>
 
-		<!-- <div v-for="item in list" :key="item.id" class="settings__item">
-			<img src="/menu.png" alt="" class="settings__icons" />
-			<div class="item">{{ item.name }}, {{ item.sys.country }}</div>
-
-			<img
-				src="/garbage.png"
-				alt=""
-				class="settings__icons"
-				@click="deleteEl(item.id)"
-			/>
-
-		</div> -->
 		<draggable
-			v-model="list"
+			v-model="computedlist"
 			group="people"
 			@start="drag = true"
 			@end="drag = false"
@@ -43,7 +31,7 @@
 </template>
 
 <script setup>
-	import { ref, defineEmits, computed } from "vue";
+	import { ref, defineEmits, computed, watch } from "vue";
 	import TheInput from "./TheInput.vue";
 	import draggable from "vuedraggable";
 
@@ -51,16 +39,18 @@
 		list: Array,
 	});
 	const { list } = props;
+	const drag = ref(false);
 	const emit = defineEmits(["rearrange"]);
+
 	const computedlist = computed({
 		get() {
-			return list.value;
+			return list;
 		},
 		set(val) {
-			emit("rearrange", value);
+			emit("rearrange", val);
 		},
 	});
-	const drag = ref(false);
+
 	function getFromSettingsLocation(loc) {
 		emit("getFromSettingsLocation", loc);
 		console.log(loc);

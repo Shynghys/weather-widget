@@ -106,8 +106,9 @@
 		if (!found) list.value.push(el);
 	}
 	function rearrange(list1) {
+		console.log("rearranging", list1.value);
 		list.value = list1;
-		localStorage.setItem("apiData", JSON.stringify(this.list));
+		localStorage.setItem("apiData", JSON.stringify(list.value));
 	}
 </script>
 
