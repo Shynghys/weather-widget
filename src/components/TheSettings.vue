@@ -42,44 +42,32 @@
 	</div>
 </template>
 
-<script>
+<script setup>
+	import { ref, defineEmits, computed } from "vue";
 	import TheInput from "./TheInput.vue";
 	import draggable from "vuedraggable";
-	export default {
-		name: "the-setting",
-		components: {
-			TheInput,
-			draggable,
+
+	const props = defineProps({
+		list: Array,
+	});
+	const { list } = props;
+	const emit = defineEmits(["rearrange"]);
+	const computedlist = computed({
+		get() {
+			return list.value;
 		},
-		data() {
-			return { drag: false };
+		set(val) {
+			emit("rearrange", value);
 		},
-		props: {
-			list: {
-				type: Array,
-				default: () => [],
-			},
-		},
-		methods: {
-			getFromSettingsLocation(loc) {
-				this.$emit("getFromSettingsLocation", loc);
-				console.log(loc);
-			},
-			deleteEl(id) {
-				this.$emit("deleteEl", id);
-			},
-		},
-		computed: {
-			list: {
-				get() {
-					return this.list;
-				},
-				set(value) {
-					this.$emit("rearrange", value);
-				},
-			},
-		},
-	};
+	});
+	const drag = ref(false);
+	function getFromSettingsLocation(loc) {
+		emit("getFromSettingsLocation", loc);
+		console.log(loc);
+	}
+	function deleteEl(id) {
+		emit("deleteEl", id);
+	}
 </script>
 
 <style>

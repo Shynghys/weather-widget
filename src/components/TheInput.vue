@@ -13,24 +13,17 @@
 	</div>
 </template>
 
-<script>
-	export default {
-		name: "the-input",
-		data() {
-			return {
-				rules: [
-					(value) => !!value || "Required.",
-					(value) => (value && value.length >= 3) || "Min 3 characters",
-				],
-			};
-		},
-		methods: {
-			getLocation(event) {
-				this.$emit("getFromInputLocation", event.target.value);
-				console.log(event.target.value);
-			},
-		},
-	};
+<script setup>
+	import { ref, defineEmits, computed } from "vue";
+	const rules = ref([
+		(value) => !!value || "Required.",
+		(value) => (value && value.length >= 3) || "Min 3 characters",
+	]);
+	const emit = defineEmits(["getFromInputLocation"]);
+	function getLocation(event) {
+		emit("getFromInputLocation", event.target.value);
+		console.log(event.target.value);
+	}
 </script>
 
 <style>

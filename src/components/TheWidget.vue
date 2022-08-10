@@ -34,16 +34,12 @@
 	</div>
 </template>
 
-<script>
-	export default {
-		name: "the-widget",
-		props: {
-			item: {
-				type: Object,
-				default: () => {},
-			},
-		},
-	};
+<script setup>
+	const props = defineProps({
+		item: Object,
+	});
+	let { item } = props;
+	console.log(item);
 </script>
 
 <style scoped>
@@ -64,8 +60,8 @@
 	.widget__temp {
 		width: 100%;
 		/* display: grid;
-																																																		place-items: center flex-start;
-																																																		grid-template: auto/auto auto; */
+																																																									place-items: center flex-start;
+																																																									grid-template: auto/auto auto; */
 		display: flex;
 		align-items: center;
 		font-size: 28px;
